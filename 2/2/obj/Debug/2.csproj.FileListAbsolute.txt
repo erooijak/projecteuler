@@ -1,1 +1,6 @@
 C:\Users\Erwin\Desktop\Project Euler\2\2\bin\Debug\2.exe.config
+C:\Users\Erwin\Desktop\Project Euler\2\2\bin\Debug\2.exe
+C:\Users\Erwin\Desktop\Project Euler\2\2\bin\Debug\2.pdb
+C:\Users\Erwin\Desktop\Project Euler\2\2\obj\Debug\2.csprojResolveAssemblyReference.cache
+C:\Users\Erwin\Desktop\Project Euler\2\2\obj\Debug\2.exe
+C:\Users\Erwin\Desktop\Project Euler\2\2\obj\Debug\2.pdb
