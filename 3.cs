@@ -34,7 +34,7 @@ namespace ProjectEuler
         {
             var factors = new List<long>();
 
-            for (long i = 2; i < number / 2; i++)
+            for (long i = 2; i*i < number; i++)
             {
                 if (number % i == 0)
                 {
@@ -48,7 +48,7 @@ namespace ProjectEuler
         {
             var isPrime = true;
 
-            for (var i = 2; i < number / 2; i++)
+            for (var i = 2; i*i < number / 2; i++)
             {
                 if (number % i == 0)
                 {
