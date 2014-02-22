@@ -14,12 +14,14 @@ public class seven {
          while (isFound == false) {
          	 i++;
      		 if (isPrime(i)) {
-     		 	counter++;
+     		 	
 
      		 	if (counter == 10001) {
      		 		isFound = true;
      		 	}
+     		 	counter++;
      		 }
+     		 
          }
          return i;
 	}
@@ -27,7 +29,7 @@ public class seven {
 	static boolean isPrime(long number) {
         boolean isPrime = true;
 
-		for (long i = 2; i*i <number + 20; i++) {
+		for (long i = 2; i*i <number  +1 ; i++) {
 			if (number % i == 0) {
 				isPrime = false;
 			}
