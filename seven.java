@@ -16,7 +16,7 @@ public class seven {
      		 if (isPrime(i)) {
      		 	counter++;
 
-     		 	if (counter == 10002) {
+     		 	if (counter == 10001) {
      		 		isFound = true;
      		 	}
      		 }
@@ -33,7 +33,7 @@ public class seven {
 			}
 		}
 
-		if (number == 1 || number == 2 || number == 3 || number == 5) {
+		if (number == 2 || number == 3 || number == 5) {
 			isPrime = true;
 		}
 		return isPrime;
