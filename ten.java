@@ -6,6 +6,8 @@
 public class ten {
 
     public static void main(String[] aArgs) {
+
+    	long startTime = System.nanoTime();   
         int maxValue = 2000000;
         long sum = 0;
 
@@ -13,7 +15,8 @@ public class ten {
         	if (isPrime(i)) sum += i;
         }
 
-        System.out.println(sum);
+        long elapsedTime = System.nanoTime() - startTime;
+        System.out.println("The answer is " + sum + " and it took " + elapsedTime / 1000000000 + " seconds");
     }
 
 	static boolean isPrime(int number) {
