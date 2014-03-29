@@ -11,16 +11,13 @@
 #
 # How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
 
-beginnings= [0,31,59,90,120,151,181,212,243,273,304,334]
-leap_beginnings = beginnings.map.with_index {|n,i| (i > 1) ? n+1 : n }
+beginnings= [0,31,59,90,120,151,181,212,243,273,304,334]	# jan = 31, feb =jan + 28 = 59, mar = jan + feb + 31 = 90, etc.
+leap_beginnings = beginnings.map.with_index {|month,i| (i > 1) ? month+1 : month }
 sundays = []
 starting_days_of_month = []
 
-number_of_days = (0..100).inject(0) { |tot,i| tot + ((i % 4 == 0) ? 366 : 365) } 
-(0..number_of_days).each { |i| sundays.push(i) if i % 7 == 0 }
-
-beginnings = [0,31,59,90,120,151,181,212,243,273,304,334]	# jan = 31, feb =jan + 28 = 59, mar = jan + feb + 31 = 90, etc.
-leap_beginnings = beginnings.map.with_index {|n,i| (i > 1) ? n+1 : n }
+number_of_days = (0..100).inject(0) { |total_days,i| total_days + ((i % 4 == 0) ? 366 : 365) } 
+(0..number_of_days).each { |day_number| sundays.push(day_number) if day_number % 7 == 0 }
 
 def leap_year?(year)
   year % 4 == 0 && (year % 400 == 0 || year % 100 != 0)
