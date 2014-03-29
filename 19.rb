@@ -12,7 +12,7 @@
 # How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
 
 beginnings= [0,31,59,90,120,151,181,212,243,273,304,334]	# jan = 31, feb =jan + 28 = 59, mar = jan + feb + 31 = 90, etc.
-leap_beginnings = beginnings.map.with_index {|month,i| (i > 1) ? month+1 : month }
+leap_beginnings = beginnings.map.with_index {|month,i| (i > 1) ? month + 1 : month }
 sundays = []
 starting_days_of_month = []
 
