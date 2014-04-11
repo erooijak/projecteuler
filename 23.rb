@@ -38,11 +38,9 @@ def any_two_can_be_summed_to_value?(list, value)
   return false
 end
 
-def index_of_smallest_abundant_number_that_is_bigger_than(list,n)
-  target = n
-  greater_than = []
+def index_of_smallest_abundant_number_that_is_bigger_than_n(list,n)
   list.each_with_index do |elmt,index|
-    if elmt > target
+    if elmt > n
       return index
     end
   end
