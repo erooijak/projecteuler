@@ -22,18 +22,17 @@
 # What is the first term in the Fibonacci sequence to contain 1000 digits?
 
 def do_fibonacci_until_1000_digits()
-  i = 1
+  f = 1
   n1 = 0
   n2 = 1
 
   while (n2.to_s.length < 1000)
     n3 = n1+n2
-    temp = n1
     n1 = n2
     n2 = n3
-    i += 1
+    f += 1
   end
-  puts "The answer is #{n2} which is the #{i}th term"
+  puts "The answer is the #{f}th term"
 end
 
 start = Time.now
