@@ -27,9 +27,9 @@ def get_list_abundant_numbers(n)
 end
 
 def any_two_can_be_summed_to_value?(list, value)
-  max = index_of_smallest_abundant_number_that_is_bigger_than_n(list,value)-1 
+  max = index_of_smallest_abundant_number_that_is_bigger_than_n(list,value)
   0.upto(max) do |i|
-    i+1.upto(max) do |j|
+    i.upto(max) do |j|
       if list[i] + list[j] == value
         return true
       end
@@ -51,4 +51,4 @@ max_value = 28123
 list = get_list_abundant_numbers(max_value)
 
 answer = (1..max_value).inject(0) {|total, m| any_two_can_be_summed_to_value?(list,m) ? total : total+m} 
-puts "The answer is #{answer} and it took #{ (Time.now - start)}."
+puts "The answer is #{answer} and it took #{ ((Time.now - start) / 60).round} minutes."
