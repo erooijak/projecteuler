@@ -49,6 +49,6 @@ end
 
 max_value = 28123
 list = get_list_abundant_numbers(max_value)
-
 answer = (1..max_value).inject(0) {|total, m| any_two_can_be_summed_to_value?(list,m) ? total : total+m} 
+
 puts "The answer is #{answer} and it took #{ ((Time.now - start) / 60).round} minutes."
