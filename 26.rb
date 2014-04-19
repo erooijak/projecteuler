@@ -48,7 +48,7 @@ end
 def get_number_with_maximum_number_of_repeating_digits()
   amount_of_repeating_digits = Hash.new
   (6..1000).each do |n|
-	  amount_of_repeating_digits[n] = number_of_repeating_digits(n) if n.prime?
+    amount_of_repeating_digits[n] = number_of_repeating_digits(n) if n.prime?
   end
   return amount_of_repeating_digits.max_by{|k,v| v}[0]
 end
