@@ -14,3 +14,48 @@
 # 
 # Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
 
+def number_of_repeating_digits(n)
+  repeated = false
+  decimals = []
+  d = 10
+  while !repeated do
+    decimals << d / n % 10
+    repeated = repeating?(decimals)
+	d *= 10
+  end
+  return decimals.size/2
+end
+
+def repeating?(arr)
+  return false if arr.size < 2 
+  slices = arr.each_slice(arr.size/2).to_a
+  return slices[0] == slices[1] && slices[0].inject(:+) > 0
+end
+
+# only prime numbers as they have longest recurring cycles as per mathematical evidence 
+# http://en.wikipedia.org/wiki/Recurring_decimal#Fractions_with_prime_denominators
+
+class Integer 
+  def prime?
+    if (self <= 1) then return false end
+    2.upto(Math.sqrt(self))	do |i|
+      if self % i == 0 then return false end
+    end
+    return true
+  end
+end
+
+def get_number_with_maximum_number_of_repeating_digits()
+  amount_of_repeating_digits = Hash.new
+  (6..1000).each do |n|
+    if n.prime? then 
+	  amount_of_repeating_digits[n] = number_of_repeating_digits(n) 
+    end
+  end
+  puts amount_of_repeating_digits
+  return amount_of_repeating_digits.max_by{|k,v| v}[0]
+end
+
+start = Time.now
+answer = get_number_with_maximum_number_of_repeating_digits()
+puts "The answer is #{answer} and it took #{Time.now-start} seconds."
