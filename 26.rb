@@ -38,7 +38,7 @@ end
 class Integer 
   def prime?
     return false if self <= 1
-    2.upto(Math.sqrt(self))	do |i|
+    2.upto(Math.sqrt(self)) do |i|
       return false if self % i == 0 
     end
     return true
