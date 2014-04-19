@@ -21,7 +21,7 @@ def number_of_repeating_digits(n)
   while !repeated do
     decimals << d / n % 10
     repeated = repeating?(decimals)
-	d *= 10
+    d *= 10
   end
   return decimals.size/2
 end
