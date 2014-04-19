@@ -25,7 +25,7 @@ class Integer
     2.upto(Math.sqrt(self)) do |i|
       return false if self % i == 0 
     end
-    return true
+    true
   end
 end
 
@@ -42,7 +42,7 @@ def get_amount_of_primes_from_quadratic_formula(a,b)
     end
     n += 1
   end
-  return primes.size
+  primes.size
 end
 
 def get_product_of_coefficients_that_produce_maximum_number_of_primes_for_consecutive_values()
@@ -57,7 +57,7 @@ def get_product_of_coefficients_that_produce_maximum_number_of_primes_for_consec
       end
     end
   end
-  return max_product
+  max_product
 end
 
 start = Time.now
