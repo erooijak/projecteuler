@@ -30,15 +30,15 @@ class Integer
 end
 
 def get_amount_of_primes_from_quadratic_formula(a,b)
-	primes = []
+  primes = []
   still_all_primes = true
   n = 0
   while still_all_primes
-  	result = n**2 + a*n + b
-  	if result.prime? then
+    result = n**2 + a*n + b
+    if result.prime? then
       primes << result
     else 
-    	still_all_primes = false
+      still_all_primes = false
     end
     n += 1
   end
@@ -46,16 +46,16 @@ def get_amount_of_primes_from_quadratic_formula(a,b)
 end
 
 def get_product_of_coefficients_that_produce_maximum_number_of_primes_for_consecutive_values()
-	max_product = 0
-	max_primes = 0
+  max_product = 0
+  max_primes = 0
   -999.upto(1000) do |a|
-  	-999.upto(1000) do |b|
-  		primes = get_amount_of_primes_from_quadratic_formula(a,b)
-  		if primes > max_primes then
-  			max_primes = primes
-  			max_product = a*b 
-  		end
-  	end
+    -999.upto(1000) do |b|
+      primes = get_amount_of_primes_from_quadratic_formula(a,b)
+      if primes > max_primes then
+        max_primes = primes
+        max_product = a*b 
+      end
+    end
   end
   return max_product
 end
