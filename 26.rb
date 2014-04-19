@@ -37,9 +37,9 @@ end
 
 class Integer 
   def prime?
-    if (self <= 1) then return false end
+    return false if self <= 1
     2.upto(Math.sqrt(self))	do |i|
-      if self % i == 0 then return false end
+      return false if self % i == 0 
     end
     return true
   end
@@ -48,11 +48,8 @@ end
 def get_number_with_maximum_number_of_repeating_digits()
   amount_of_repeating_digits = Hash.new
   (6..1000).each do |n|
-    if n.prime? then 
-	  amount_of_repeating_digits[n] = number_of_repeating_digits(n) 
-    end
+	  amount_of_repeating_digits[n] = number_of_repeating_digits(n) if n.prime?
   end
-  puts amount_of_repeating_digits
   return amount_of_repeating_digits.max_by{|k,v| v}[0]
 end
 
