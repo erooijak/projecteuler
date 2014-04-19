@@ -31,11 +31,12 @@ def create_grid(size)
       grid[i][size-(j+1)] = numbers.pop
     end
   end
+
   grid
 end
  
 def sum_diagonals(grid)
-  grid.each_index.inject{|acc, i| acc + grid[i][i] + grid[i][-1 - i]}
+  (0..grid.size-1).inject(0) {|acc, i| acc + grid[i][i] + grid[i][-1-i] }-1
 end
 
 start = Time.now
