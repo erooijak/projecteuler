@@ -8,6 +8,10 @@ class Integer
   def prime?
   	self > 1 && !(2..Math.sqrt(self)).any? { |i| self % i == 0 }
   end
+
+  def has2456or8?
+    self > 10 && [2,4,5,6,8].any? {|i| String(self).index(i.to_s)}
+  end
 end
 
 def rotations(p)
@@ -16,7 +20,7 @@ def rotations(p)
 end
 
 def all_rotations_prime?(n)
-  rotations(n).all? { |a| a.to_s.gsub(/\D/,'').to_i.prime? }
+   !n.has2456or8? && rotations(n).all? { |a| a.to_s.gsub(/\D/,'').to_i.prime? }
 end
 
 def count_circular_primes_below(n)
