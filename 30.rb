@@ -12,11 +12,7 @@
 
 def sum_digits_to_power_of_5(n)
   sum = n.to_s.scan(/\d/).inject(0){|acc,i| acc + i.to_i ** 5}
-  if sum == n then
-  	return sum
-  else
-  	return 0
-  end
+  sum == n ? sum : 0
 end
 
 start = Time.now
