@@ -20,7 +20,7 @@ def rotations(p)
 end
 
 def all_rotations_prime?(n)
-   !n.has2456or8_while_bigger_than_10? && rotations(n).all? { |a| a.to_s.gsub(/\D/,'').to_i.prime? }
+   !n.has2456or8_while_bigger_than_10? && rotations(n).all? { |a| a.join.to_i.prime? }
 end
 
 def count_circular_primes_below(n)
