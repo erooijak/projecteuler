@@ -10,7 +10,7 @@
 
 def pandigital?(n)
   numbers = n.scan(/\d/).to_a
-  numbers.length == 9 && numbers.length == numbers.uniq.length && numbers.include?("1") && numbers.include?("2") && numbers.include?("3") && numbers.include?("4") && numbers.include?("5") && numbers.include?("6") && numbers.include?("7") && numbers.include?("8") && numbers.include?("9")
+  numbers.length == 9 && numbers.length == numbers.uniq.length && ([*"1".."9"] - numbers).empty?
 end
 
 def has_pandigital_multiplicand_multiplier_product_identity?(n)
