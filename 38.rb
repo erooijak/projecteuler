@@ -18,7 +18,7 @@
 
 def pandigital?(n)
   numbers = n.to_s.scan(/\d/).to_a
-  numbers.length == 9 && numbers.length == numbers.uniq.length && ([*"1".."9"] - numbers).empty?
+  numbers.length == 9 && numbers.length == numbers.uniq.length && ([*"1".."9"]-numbers).empty?
 end
 
 def get_concatenated_product n
