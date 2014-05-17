@@ -21,7 +21,7 @@ class String
 end
 
 names = File.read('words.txt').gsub(/"/,'').split(',').sort
-triangles = (1..50).map {|n| (n/2)*(n+1)}
+triangles = (1..30).map {|n| (n/2)*(n+1)}
 
 result = names.count {|name| triangles.include?(name.points) }
 
