@@ -16,14 +16,13 @@ class String
   def points
     each_char.map do |char|
       char.downcase.ord-96
-    end.inject(0,:+)  
+    end.inject(:+)  
   end
 end
 
 names = File.read('words.txt').gsub(/"/,'').split(',').sort
 triangles = (1..50).map {|n| (n/2)*(n+1)}
 
-result = 0
-names.each {|n| result += 1 if triangles.include?(n.points)}
+result = names.count {|name| triangles.include?(name.points) }
 
 puts "The answer is #{result} and it took #{(Time.now-start)*1000} milliseconds."
