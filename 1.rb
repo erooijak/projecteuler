@@ -2,6 +2,6 @@
 # Find the sum of all the multiples of 3 or 5 below 1000.
 
 start = Time.now
-answer = 1.upto(1000).select{|n| n%3==0||n%5==0}.inject(:+)
+answer = (1..999).select{|n|n%3==0||n%5==0}.inject(:+)
 
 puts "The answer is #{answer} and it took #{ (Time.now - start) * 1000} milliseconds."
