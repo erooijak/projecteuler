@@ -1,0 +1,29 @@
+# The prime 41, can be written as the sum of six consecutive primes:
+# 41 = 2 + 3 + 5 + 7 + 11 + 13
+
+# This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+
+# The longest sum of consecutive primes below one-thousand that adds to a prime, contains 
+# 21 terms, and is equal to 953.
+
+# Which prime, below one-million, can be written as the sum of the most consecutive primes?
+
+require 'prime'
+
+primes = Prime.take(78498)
+
+answer = 0
+
+550.downto(25) do |i|
+  p i
+  primes.each_cons(i).each { |e| 
+  	e_sum = e.inject(:+)
+    if e_sum < 1000000 && e_sum.prime? then
+      answer = e.inject(:+)
+	  p answer,i
+	  max_i = i
+  	end
+  }
+end
+
+# Answer was printed.
