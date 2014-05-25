@@ -30,6 +30,6 @@ def prime_plus_twice_a_square?(composite_number)
 end
 
 start = Time.now
-answer = (4..Float::INFINITY).lazy.select { |n| n % 2 != 0 && !prime_plus_twice_a_square?(n)  }.first
+answer = (2..Float::INFINITY).lazy.select { |n| n % 2 != 0 && !prime_plus_twice_a_square?(n)  }.first
 
 puts "The answer is #{answer} and it took #{Time.now - start} seconds."
