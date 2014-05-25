@@ -8,5 +8,15 @@
 # D = |Pk − Pj| is minimised; what is the value of D?
 
 require 'mathn'
+require 'set'
 
-(1..Float::INFINITY).lazy.map {|n| n*(3*n - 1) / 2}.each {|i| puts i}
+start = Time.now
+
+max_pent = 3000
+pent_numbers = (1..max_pent).map {|n| n*(3*n - 1) / 2}.to_set
+
+answer = pent_numbers.to_a.combination(2).select {|a,b| 
+  pent_numbers.include?(a+b) && pent_numbers.include?(b-a)
+}.map {|a,b| b-a}.min
+
+puts "The answer is #{answer} and it took #{Time.now - start} seconds."
