@@ -14,22 +14,22 @@
 
 require 'prime'
 
-def prime_plus_twice_a_square?(composite_number)
-  prime_plus_twice_a_square = false
+def goldbach?(composite_number)
+  goldbach = false
   primes = Prime.take_while {|p| p <= composite_number}
   
   0.upto(primes.size-1) do |i|
   	0.upto(Math.sqrt(composite_number)) do |j|
   	  if primes[i] + 2*j**2 == composite_number then
-  	  	prime_plus_twice_a_square = true
+  	  	goldbach = true
   	  	break
   	  end
   	end
   end
-  prime_plus_twice_a_square
+  goldbach
 end
 
 start = Time.now
-answer = (2..Float::INFINITY).lazy.select { |n| n % 2 != 0 && !prime_plus_twice_a_square?(n)  }.first
+answer = (2..Float::INFINITY).lazy.select { |n| n % 2 != 0 && !goldbach?(n)  }.first
 
 puts "The answer is #{answer} and it took #{Time.now - start} seconds."
