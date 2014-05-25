@@ -11,10 +11,10 @@ max_t = 100000
 
 start = Time.now
 
-t = (1..max_t).map {|n| n*(n+1)/2}
+# No triangle numbers t since all triangle numbers are hexagonal
 p = (1..max_t/2).map {|n| n*(3*n-1)/2}
 h = (1..max_t/2).map {|n| n*(2*n-1)}
 
-answer = (t&h&p)[2]
+answer = (h&p)[2]
 
 puts "The answer is #{answer} and it took #{Time.now - start} seconds."
