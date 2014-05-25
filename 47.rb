@@ -14,4 +14,4 @@
 
 require 'prime'
 
-puts (646..140000).each_cons(4).select { |arr| arr.all? {|n| n.prime_division.size == 4 }}.first[0]
+puts (646..Float::INFINITY).lazy.each_cons(4).select { |arr| arr.all? {|e| e.prime_division.size == 4 }}.first[0]
