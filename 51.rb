@@ -18,30 +18,8 @@ def is_eight_times_prime_by_replacing_part_of_the_number?(prime)
 
   #Substitute 1 value, return true if all resulting values are prime
   length = number_array.size
-  (0..length-1).to_a.each  { |i|
-    replacement_primes = []
-    (0..9).each { |k|
-      temp_number_array = number_array.dup 
-      temp_number_array[i] = k
-      value = temp_number_array.join.to_i
-      replacement_primes << value if Prime.prime?(value) && !(i == 0 && temp_number_array[0] == 0)
-    }
-    return [true, replacement_primes[0]] if replacement_primes.size == 8
-  } 
 
-  # Substitute 2 values, return true if all resulting 
-  # values are prime
-  (0..length-1).to_a.combination(2).each  { |i,j|
-    replacement_primes = []
-    (0..9).each { |k| 
-      temp_number_array = number_array.dup 
-	  temp_number_array[i] = k
-	  temp_number_array[j] = k
-	  value = temp_number_array.join.to_i
-	  replacement_primes << value if Prime.prime?(value) && !(i == 0 && temp_number_array[0] == 0)
-    }
-    return [true, replacement_primes[0]] if replacement_primes.size == 8
-  }
+  # Only substitution of three values can lead to an 8 value prime
 
   # Substitute 3 values, return true if all resulting 
   # values are prime
@@ -57,8 +35,6 @@ def is_eight_times_prime_by_replacing_part_of_the_number?(prime)
     }
     return [true, replacement_primes[0]] if replacement_primes.size == 8
   }
-
-  # skip 4 values or more
 
   return [false,0]
 end
