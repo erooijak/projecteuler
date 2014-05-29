@@ -26,7 +26,7 @@ def is_eight_times_prime_by_replacing_part_of_the_number?(prime)
       value = temp_number_array.join.to_i
       replacement_primes << value if Prime.prime?(value) && !(i == 0 && temp_number_array[0] == 0)
     }
-    return true if replacement_primes.size == 8
+    return [true, replacement_primes[0]] if replacement_primes.size == 8
   } 
 
   # Substitute 2 values, return true if all resulting 
@@ -40,7 +40,7 @@ def is_eight_times_prime_by_replacing_part_of_the_number?(prime)
 	  value = temp_number_array.join.to_i
 	  replacement_primes << value if Prime.prime?(value) && !(i == 0 && temp_number_array[0] == 0)
     }
-    return true if replacement_primes.size == 8
+    return [true, replacement_primes[0]] if replacement_primes.size == 8
   }
 
   # Substitute 3 values, return true if all resulting 
@@ -55,18 +55,23 @@ def is_eight_times_prime_by_replacing_part_of_the_number?(prime)
 	  value = temp_number_array.join.to_i
 	  replacement_primes << value if Prime.prime?(value) && !(i == 0 && temp_number_array[0] == 0)
     }
-    return true if replacement_primes.size == 8
+    return [true, replacement_primes[0]] if replacement_primes.size == 8
   }
 
   # skip 4 values or more
 
-  return false
+  return [false,0]
 end
 
-Prime.lazy.each { |p| 
-  break if is_eight_times_prime_by_replacing_part_of_the_number?(p)
-}
-# Result => 120383, which is substitution of 
+answer = 0
+n = 56003-2
+while n += 2
+  next if !n.prime? 
+  answer = is_eight_times_prime_by_replacing_part_of_the_number?(n)[1] 
+  break if is_eight_times_prime_by_replacing_part_of_the_number?(n)[0]
+end
+puts answer
+# n => 120383, which is substitution of 
 # *2*3*3
 # 121313
 # 222323
