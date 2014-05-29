@@ -67,8 +67,9 @@ answer = 0
 n = 56003-2
 while n += 2
   next if !n.prime? 
-  answer = is_eight_times_prime_by_replacing_part_of_the_number?(n)[1] 
-  break if is_eight_times_prime_by_replacing_part_of_the_number?(n)[0]
+  result = is_eight_times_prime_by_replacing_part_of_the_number?(n)
+  answer = result[1] 
+  break if result[0]
 end
 puts answer
 # n => 120383, which is substitution of 
