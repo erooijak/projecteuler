@@ -25,14 +25,14 @@ while (!found)
 
   if (Time.now.to_i - time_point.to_i) > 7200 then #every two hours write checkpoint
     time_point = Time.now
-    File.open("lychrel_quest.txt", "a") do |file|
-       file.puts "Time: #{Time.now}\nIteration: #{value}\nLength: #{n.to_s.length}\n\n"
+    File.open("lychrel_quest.txt", "w") do |file|
+       file.puts "Time: #{Time.now}\nIteration: #{value}\nLength: #{n.to_s.length}\nValue: #{n}\n\n"
     end
   end
 
   if found then
-    File.open("lychrel_quest.txt", "a") do |file|
-       file.puts "Time: #{Time.now}\nIteration: #{value}\nValue: #{n}\nLength: #{n.to_s.length}"
+    File.open("lychrel_quest.txt", "w") do |file|
+       file.puts "Time: #{Time.now}\nIteration: #{value}\nLength: #{n.to_s.length}\nValue: #{n}"
     end
   end
 
