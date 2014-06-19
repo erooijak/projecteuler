@@ -4,6 +4,6 @@
 #
 
 while true; do
-  inotifywait -qq -e CLOSE_WRITE lychrel_quest.txt
+  inotifywait -qq -e CLOSE_WRITE ./lychrel_quest.txt
   git add . ; git commit -a -m 'autocommit on change'; git push
 done
