@@ -32,7 +32,7 @@ class Integer
     value = 0
     while (value <= 50)
       n += n.to_s.reverse.to_i
-      return false if (n.palindromic?)
+      return false if n.palindromic?
       value += 1
     end
     true
