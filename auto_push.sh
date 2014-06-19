@@ -4,6 +4,6 @@
 #
 
 while true; do
-  inotifywait -qq -e CLOSE_WRITE ~/Desktop/projecteuler/lychrel_quest.txt
-  git add . ; git commit -a -m 'autocommit on change'; git push
+  git add . ; git commit -a -m 'autocommit every two hours'; git push
+  sleep 7200
 done
