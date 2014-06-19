@@ -31,7 +31,7 @@ while (!found)
   end
 
   if found then
-  	File.open("lychrel_quest.txt", "a") do |file|
+    File.open("lychrel_quest.txt", "a") do |file|
        file.puts "Time: #{Time.now}\nIteration: #{value}\nValue: #{n}\nLength: #{n.to_s.length}"
     end
   end
