@@ -30,7 +30,6 @@ while prime_ratio >= 0.10
   side_length += 2 and diagonal_size += 4
   # Add one to prime count for each corner if it is prime
   # Corners are given by n2 (top left), n2-n+1, n2-2n+2, and n2-3n+3
-  prime_count += 1 if (side_length**2).prime?
   prime_count += 1 if (side_length**2-side_length+1).prime?
   prime_count += 1 if (side_length**2-2*side_length+2).prime?
   prime_count += 1 if (side_length**2-3*side_length+3).prime?
