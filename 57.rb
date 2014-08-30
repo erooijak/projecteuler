@@ -37,6 +37,8 @@ puts expand "1 + Rational(1,2)", 1, 1000, 0
 # Second solution without eval and string (inspiration from mat's answer on first page http://projecteuler.net/thread=57)
 # Takes 100ms
 # (Recursive function is last = 1+1/(1+last))
+
+require 'mathn' # For prettier fraction
 def expand rational_fraction, iteration, max_iterations, count
 	new_rational_fraction = 1+1/(1+rational_fraction) and iteration += 1
   count += 1 if new_rational_fraction.numerator_more_digits_than_denominator?
@@ -47,7 +49,7 @@ def expand rational_fraction, iteration, max_iterations, count
 	end
 end
 
-puts expand 1 + Rational(1,2), 1, 1000, 0
+puts expand 1 + 1/2, 1, 1000, 0
 
 
 
