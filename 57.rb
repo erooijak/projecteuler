@@ -16,20 +16,20 @@
 
 class Rational
   def numerator_more_digits_than_denominator?
-	  self.numerator.to_s.size > self.denominator.to_s.size
+    self.numerator.to_s.size > self.denominator.to_s.size
   end
 end
 
 # First solution with string and eval which takes 8 seconds here
 def expand rational_fraction, iteration, max_iterations, count
-	new_rational_fraction = rational_fraction[0..-iteration].gsub(/2$/, '2 + Rational(1, 2' + ')' * iteration)
+  new_rational_fraction = rational_fraction[0..-iteration].gsub(/2$/, '2 + Rational(1, 2' + ')' * iteration)
   iteration += 1
   count += 1 if eval(new_rational_fraction).numerator_more_digits_than_denominator?
   if iteration <= max_iterations
     expand new_rational_fraction, iteration, max_iterations, count
-	else
+  else
     count
-	end
+  end
 end
 
 puts expand "1 + Rational(1,2)", 1, 1000, 0
@@ -40,13 +40,13 @@ puts expand "1 + Rational(1,2)", 1, 1000, 0
 
 require 'mathn' # For prettier fraction
 def expand rational_fraction, iteration, max_iterations, count
-	new_rational_fraction = 1+1/(1+rational_fraction) and iteration += 1
+  new_rational_fraction = 1+1/(1+rational_fraction) and iteration += 1
   count += 1 if new_rational_fraction.numerator_more_digits_than_denominator?
   if iteration <= max_iterations
     expand new_rational_fraction, iteration, max_iterations, count
-	else
+  else
     count
-	end
+  end
 end
 
 puts expand 1 + 1/2, 1, 1000, 0
