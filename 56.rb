@@ -5,4 +5,4 @@
 
 
 # Considering natural numbers of the form, a^b, where a, b < 100, what is the maximum sum of their digits?
-p (1..100).to_a.permutation(2).to_a.map { |a| (a[0]**a[1]).to_s.scan(/\d/).map { |s| s.to_i }.inject(:+) }.max
+p [*1..99].permutation(2).to_a.map { |a| (a[0]**a[1]).to_s.scan(/\d/).map { |s| s.to_i }.inject(:+) }.max
