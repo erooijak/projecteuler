@@ -29,11 +29,6 @@ words = File.read('59_words.txt').split(/\r\n/)
 # Encryption keys consist of three lower case characters.
 possible_keys = ("a".."z").to_a.permutation(3).map { |key_arr| key_arr.join }
 
-# Count words in sentence
-def count(sentence, word)
-  sentence.downcase.scan(word).size
-end
-
 # Decrypt message with the keys and count the occurrences of the common words, the 
 # maximum amount is the key we are searching for.
 
@@ -69,7 +64,6 @@ end
 result = "This will be the result."
 
 most_matches = 0
-i = 0
 decrypted_arrays.each do |decrypted_array|
   matches = 0
   decrypted_string = decrypted_array.map { |b| b.chr }.join
@@ -77,11 +71,10 @@ decrypted_arrays.each do |decrypted_array|
   # Try to match all words from the list and count for strings that only contain
   # Latin symbols.
   if all_latin? decrypted_array then
-    words.each { |word| matches += count(decrypted_string, word) }
+    words.each { |word| matches += decrypted_string.downcase.scan(word).size }
   end
 
   if matches > most_matches then
-    p matches
     result = decrypted_string 
   end
 
