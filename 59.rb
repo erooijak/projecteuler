@@ -31,7 +31,7 @@ possible_keys = ("a".."z").to_a.permutation(3).map { |key_arr| key_arr.join }
 
 # Count words in sentence
 def count(sentence, word)
-  sentence.scan(word).size
+  sentence.downcase.scan(word).size
 end
 
 # Decrypt message with the keys and count the occurrences of the common words, the 
