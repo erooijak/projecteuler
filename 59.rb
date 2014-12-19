@@ -55,6 +55,9 @@ possible_keys.each do |key|
     decrypted_array << (temp_cipher_values.shift ^ bytes_key[2])
   end
 
+  # Pick up the first one
+  decrypted_array << (temp_cipher_values.shift ^ bytes_key[0])
+
   decrypted_arrays << decrypted_array
 
 end
