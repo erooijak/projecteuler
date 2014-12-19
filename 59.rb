@@ -24,7 +24,7 @@
 # in the original text.
 
 cipher_values = File.read('59_cipher.txt').split(/,/).map { |str| str.to_i}
-words = File.read('59_words.txt').split(/\n/)
+words = File.read('59_words.txt').split(/\r\n/)
 
 # Encryption keys consist of three lower case characters.
 possible_keys = ("a".."z").to_a.permutation(3).map { |key_arr| key_arr.join }
@@ -59,6 +59,10 @@ possible_keys.each do |key|
 
 end
 
+def all_latin? arr
+  arr.all? { |elm| !!elm.chr.match(/[a-zA-Z0-9()\s,\.';!]/) }
+end
+
 result = "This will be the result."
 
 most_matches = 0
@@ -66,15 +70,18 @@ i = 0
 decrypted_arrays.each do |decrypted_array|
   matches = 0
   decrypted_string = decrypted_array.map { |b| b.chr }.join
-  words.each { |word| matches += count(decrypted_string, word) }
-  
+
+  # Try to match all words from the list and count for strings that only contain
+  # Latin symbols.
+  if all_latin? decrypted_array then
+    words.each { |word| matches += count(decrypted_string, word) }
+  end
+
   if matches > most_matches then
+    p matches
     result = decrypted_string 
   end
-  
-  # Counting down till we have tried all keys...
-  puts 26**3 - i 
-  i = i + 1
+
 end
 
 puts result
