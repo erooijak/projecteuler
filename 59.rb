@@ -63,7 +63,7 @@ possible_keys.each do |key|
 end
 
 def all_latin? arr
-  arr.all? { |elm| !!elm.chr.match(/[a-zA-Z0-9()\s,\.';!]/) }
+  arr.all? { |elm| !!elm.chr.match(/[a-zA-Z0-9()\s,\.'"_&^%@?:`~|+=*;!]/) }
 end
 
 result = "This will be the result."
