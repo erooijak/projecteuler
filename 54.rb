@@ -63,86 +63,480 @@
 
 # How many hands does Player 1 win?
 
-player1, player2 = [], []
+# Answer taken from http://oxaric.wordpress.com/2008/11/24/euler-project-problem-54-solution/.
 
-File.foreach('poker.txt') {|line| 
-  cards = line.split(/\s/)
-  player1 << cards[0..4]
-  player2 << cards[5..9]
-}
-def royal_flush?(cards)
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["T","J","Q","K","A"]).empty? && 
-  flush?(cards)
+# By: Louis Casillas, oxaric@gmail.com
+
+# Euler Problem #54
+# How many hands does Player 1 win?
+# The hands are in filename 'poker.txt' and the first 5 space delimited 
+# values are for player 1's cards and the other 5 are for player 2's cards.
+
+# card values: 2 to 10, Jack = 11, Queen = 12, King = 13, Ace = 14
+# card suits: Hearts = 0, Diamonds = 1, Spades = 2, Clubs = 3
+
+class Card
+   attr_accessor :value, :suit
+
+   def initialize( card )
+
+      temp_value = card[0, 1]
+      temp_suit = card[1, 1]
+      
+      temp_suit.downcase!
+
+      if temp_suit == "h"
+         temp_suit = "0"      
+      else
+         if temp_suit == "d"
+            temp_suit = "1"
+         else
+            if temp_suit == "s"
+               temp_suit = "2"
+            else
+               temp_suit = "3"
+            end
+         end
+      end
+         
+      temp_value.downcase!
+      
+      if temp_value == "t"
+         temp_value = "10"
+      else
+         if temp_value == "j"
+            temp_value = "11"
+         else
+            if temp_value == "q"
+               temp_value = "12"
+            else
+               if temp_value == "k"
+                  temp_value = "13"
+               else
+                  if temp_value == "a"
+                     temp_value = "14"
+                  end
+               end
+            end
+         end
+      end
+
+      @value = temp_value.to_i()
+      @suit = temp_suit.to_i()
+   end
+
+   def <=>( other_card )
+      @value <=> other_card.value
+   end
+
+   def eql?( other_card )
+      @value == other_card.value
+   end
+
+   def hash
+      [value].hash
+   end
+
+   def to_s
+      @value.to_s() + @suit.to_s()
+   end
 end
 
-def straight_flush?(cards)
-  result = flush?(cards) && straight?(cards)[0]
-  highest = straight?(cards)[1]
-  return result,highest
+class Hand
+   def initialize( *cards )
+      
+      cards.flatten!      
+      
+      @cards = Array.new( cards.size )
+            
+      for i in (0...cards.size)
+         @cards[i] = Card.new( cards[i] ) 
+      end
+   end
+   
+   def getValueHashTable
+      value_hash_table = Array.new(15)         
+
+      for i in (0..14)
+         value_hash_table[i] = 0
+      end
+         
+      for i in (0...@cards.size)
+         card_value = @cards[i].value
+         value_hash_table[ card_value ] += 1
+      end
+
+      value_hash_table
+   end
+
+   def getSuitHashTable
+      suit_hash_table = Array.new(4)
+
+      for i in (0..3)
+         suit_hash_table[i] = 0
+      end
+         
+      for i in (0...@cards.size)
+         card_suit = @cards[i].suit
+         suit_hash_table[ card_suit ] += 1
+      end
+
+      suit_hash_table
+   end
+
+   def whatIsTheHighest?
+      test = isRoyalFlush?
+      if test[0]
+         return [23, test[1]]
+      end
+
+      test = isStraightFlush?
+      if test[0]
+         return [22, test[1]]
+      end
+
+      test = isFourOfAKind?
+      if test[0]
+         return [21, test[1]]
+      end
+
+      test = isFullHouse?
+      if test[0]
+         return [20, test[1], test[2]]
+      end
+
+      test = isFlush?
+      if test[0]
+         return [19, test[1]]
+      end
+
+      test = isStraight?
+      if test[0]
+         return [18, test[1]]
+      end
+
+      test = isThreeOfAKind?
+      if test[0]
+         return [17, test[1]]
+      end
+
+      test = isTwoPair?
+      if test[0]
+         return [16, test[1], test[2]]
+      end
+
+      test = isOnePair?
+      if test[0]
+         return [15, test[1]]
+      end
+
+      highestCardValue?
+   end
+   
+   def isRoyalFlush?
+      if isStraightFlush?[0]
+         hash_value = getValueHashTable         
+         
+         is_royal = false
+         
+         for i in (10..14)
+            if hash_value[ i ] > 0
+               is_royal = true
+            else
+               return [false]
+            end
+         end
+         
+         if is_royal
+            return [true, 14]
+         end
+      end
+
+      [false]
+   end
+
+   def isStraightFlush?
+      test1 = isFlush?
+      test2 = isStraight?
+
+      if test1[0] && test2[0]
+         [true, test2[1]]
+      else
+         [false]
+      end
+   end
+
+   def isFourOfAKind?
+      value_table = getValueHashTable
+
+      for i in (0..14)
+         if value_table[i] >= 4
+            return [true, i]
+         end
+      end
+
+      [false]
+   end
+
+   def isFullHouse?
+      test1 = isThreeOfAKind?
+      test2 = isTwoPair?
+      if test1[0] && test2[0]
+
+         if test1[1] == test2[1]
+            [true, test1[1], test2[2]]
+         else
+            [true, test1[1], test2[1]]
+         end
+      else
+         [false]
+      end
+   end
+
+   def isFlush?
+      suit_hash = getSuitHashTable
+
+      for i in (0..3)
+         temp = suit_hash[i]         
+
+         if temp == @cards.size
+            return [true, highestCardValue?[0]]
+         end
+
+         break if (temp < @cards.size) && (temp != 0)
+      end
+
+      [false]
+   end
+
+   def isStraight?
+      sorted_cards = @cards.sort
+      
+      card_value = sorted_cards[0].value
+
+      for i in (1...@cards.size)
+         if (card_value + 1) != sorted_cards[i].value
+            return [false]
+         end
+
+         card_value += 1
+      end
+
+      [true, card_value]
+   end
+
+   def isThreeOfAKind?
+      value_table = getValueHashTable
+
+      for i in (0..14)
+         if value_table[i] >= 3
+            return [true, i]
+         end
+      end
+
+      [false]
+   end
+
+   def isTwoPair?
+      if isOnePair?[0]
+         number_of_pairs = 0
+
+         value_table = getValueHashTable
+         
+         first_pair_card = 0
+         second_pair_card = 0
+
+         for i in (0..14)
+            if value_table[i] >= 2
+               number_of_pairs += 1
+
+               if number_of_pairs == 1
+                  first_pair_card = i
+               end
+
+               if number_of_pairs == 2
+                  second_pair_card = i
+               end
+            end
+         end
+         
+         if number_of_pairs >= 2
+            if first_pair_card > second_pair_card
+               return [true, first_pair_card, second_pair_card]   
+            else
+               return [true, second_pair_card, first_pair_card]
+            end
+         else
+            [false]
+         end
+      else
+         [false]
+      end
+   end
+
+   def isOnePair?
+      value_table = getValueHashTable
+
+      for i in (0..14)
+         if value_table[i] >= 2
+            return [true, i]
+         end
+      end
+      
+      [false]
+   end
+
+   def highestCardValue?
+      sorted_cards = @cards.sort
+      
+      card_values = Array.new()
+      
+      for i in (0...@cards.size)
+         card_values.insert( 0, sorted_cards[i].value )
+      end
+
+      card_values
+   end
+
+   def >( other_hand )
+      
+      my_hand = whatIsTheHighest?
+      their_hand = other_hand.whatIsTheHighest?
+
+      if my_hand[0] > their_hand[0]
+         return true
+      end
+      
+      if my_hand[0] < their_hand[0]
+         return false
+      end
+
+      for i in (1...my_hand.size)
+         if my_hand[i] > their_hand[i]
+            return true
+         end
+
+         if my_hand[i] < their_hand[i]
+            return false
+         end
+      end
+
+      my_hand = highestCardValue?
+      their_hand = other_hand.highestCardValue?
+
+      for i in (0...my_hand.size)
+
+         if my_hand[i] > their_hand[i]
+            return true
+         end
+
+         if my_hand[i] < their_hand[i]
+            return false
+         end
+      end
+
+      nil
+   end
+
+   def <( other_hand )
+      
+      my_hand = whatIsTheHighest?
+      their_hand = other_hand.whatIsTheHighest?
+
+      if my_hand[0] > their_hand[0]
+         return false
+      end
+      
+      if my_hand[0] < their_hand[0]
+         return true
+      end
+
+      for i in (1...my_hand.size)
+         if my_hand[i] > their_hand[i]
+            return true
+         end
+
+         if my_hand[i] < their_hand[i]
+            return false
+         end
+      end
+      
+      my_hand = highestCardValue?
+      their_hand = other_hand.highestCardValue?
+
+      for i in (0...my_hand.size)
+
+         if my_hand[i] > their_hand[i]
+            return false
+         end
+
+         if my_hand[i] < their_hand[i]
+            return true
+         end
+      end
+
+      nil
+   end
+
+   def ==( other_hand )
+      
+      my_hand = whatIsTheHighest?
+      their_hand = other_hand.whatIsTheHighest?
+      
+      for i in (0...my_hand.size)
+
+         if my_hand[i] != their_hand[i]
+            return false
+         end
+      end
+
+      true
+   end
+
+   def to_s
+      temp_s = ""
+      
+      for i in (0...@cards.size)
+         temp_s += @cards[i].to_s + " "
+      end
+
+      temp_s
+   end
 end
 
-def four_of_a_kind?(cards)
-  result = ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]])
+file = File.new("poker.txt", "r")
+
+temp_s = ""
+
+total_wins_for_player1 = 0
+
+while (line = file.gets)
+   hands = line.split(" ")
+
+   for i in (0..4)
+      temp_s += hands[i] + " "
+   end
+puts
+   puts temp_s
+   player1_hand = Hand.new( temp_s.split( " " ) )
+   
+   temp_s = ""
+
+   for i in (5..9)
+      temp_s += hands[i] + " "
+   end
+
+   puts temp_s
+   player2_hand = Hand.new( temp_s.split( " " ) )
+puts   
+   if player1_hand > player2_hand
+      total_wins_for_player1 += 1
+   end
+
+   temp_s = ""
 end
 
-def full_house?(cards)
-  result = ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]]).uniq.size == 2
-end
+file.close
 
-def flush?(cards)
-  result = ([cards[0][1],cards[1][1],cards[2][1],cards[3][1],cards[4][1]]).uniq.size == 1
-end
+puts "Player 1 won: " + total_wins_for_player1.to_s + " times."
 
-def straight?(cards)
-  result = ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["T","J","Q","K","A"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["T","J","Q","K","9"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["T","J","Q","8","9"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["T","J","7","8","9"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["T","6","7","8","9"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["5","6","7","8","9"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["5","6","7","8","4"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["5","6","7","3","4"]).empty? ||
-  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-  	["5","6","2","3","4"]).empty?
-  
-  highest = 2
-  highest = 14 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["T","J","Q","K","A"]).empty?
-  highest = 13 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["T","J","Q","K","9"]).empty?
-  highest = 12 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["T","J","Q","8","9"]).empty?
-  highest = 11 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["T","J","7","8","9"]).empty?
-  highest = 10 if  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["T","6","7","8","9"]).empty?
-  highest = 9 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["5","6","7","8","9"]).empty?
-  highest = 8 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["5","6","7","8","4"]).empty?
-  highest = 7 if  ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["5","6","7","3","4"]).empty? 
-  highest = 6 if ([cards[0][0],cards[1][0],cards[2][0],cards[3][0],cards[4][0]] - 
-    ["5","6","2","3","4"]).empty?
-
-  return result,highest
-end
-#     High Card: Highest value card.
-#     One Pair: Two cards of the same value.
-#     Two Pairs: Two different pairs.
-#     Three of a Kind: Three cards of the same value.
-#     Straight: All cards are consecutive values.
-#     Flush: All cards of the same suit.
-#     Full House: Three of a kind and a pair.
-#     Four of a Kind: Four cards of the same value.
-#     Straight Flush: All cards are consecutive values of same suit.
-#     Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
