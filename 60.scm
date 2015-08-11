@@ -9,7 +9,7 @@
 ;; produce another prime.
 
 
-;; Generate list of primes up to some target number (e.g., 1.000.000).
+;; Generate list of primes up to some target number (e.g., 1.000.000)
 
 (define (prime? n)
   (define (check-divisible n divisor)
@@ -52,15 +52,14 @@
               (test-prime (+ i 1)))))
     (test-prime 2)))
 
-(define primes-list (primes-up-to 1000))
+(define primes-list (primes-up-to 1000000))
 
 
-;; From list generate split arrays of allowed pairs.
+;; From list generate split arrays of allowed pairs
 
 ; www.stackoverflow.com/questions/12834562/scheme-number-to-list#12841962
 (define (number->list n)
-  (let loop ((n n)
-             (acc '()))
+  (let loop ((n n) (acc '()))
     (if (< n 10)
         (cons n acc)
         (loop (quotient n 10)
@@ -79,18 +78,31 @@
   (define (split lst pos)
     (list (drop-right lst pos) (take-right lst pos)))
   (define (prime-pairs-iter n acc)
-    (cond ((zero? n) (if (null? acc) '() (list acc)))
-          (else (prime-pairs-iter (- n 1) 
-                                  (let ((s (split lst n)))
-                                    (if (and (prime? (list->number (car s)))
-                                             (prime? (list->number (cadr s))))
-                                        (append s acc)
-                                        acc))))))
+    (if (zero? n) (if 
+                   (or (null? acc) 
+                       (zero? (caar acc)) 
+                       (zero? (caadr acc)) 
+                       (> (length acc) 2)) 
+                   '() 
+                   (list acc))
+        (prime-pairs-iter (- n 1) 
+                          (let ((s (split lst n)))
+                            (if (and (prime? (list->number (car s)))
+                                     (prime? (list->number (cadr s))))
+                                (append s acc)
+                                acc)))))
   (prime-pairs-iter (- (length lst) 1) '()))
 
 (define split-array-of-allowed-pairs (append-map prime-pairs primes-list-split))
 
 
-;; Use list of pairs for efficient search for a group of five that satisfies constraints.
+;; Use list of pairs for efficient search for groups of five that satisfy constraints
 
-; TODO!
+(define (prime-group allowed-pairs size)
+  ; From allowed pairs find all groups of 3, 4 and 5
+
+;; Add them
+
+(define (sum lst)
+  (if (null? lst) 0
+      (+ (car lst) (sum (cdr lst)))))
