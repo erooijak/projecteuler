@@ -72,7 +72,8 @@
         n
         (loop (+ (* 10 n) (car lst)) (cdr lst)))))
 
-(define primes-list-split (map number->list primes-list))
+(define primes-list-split 
+  (map number->list primes-list))
 
 (define (prime-pairs lst)
   (define (split lst pos)
@@ -93,16 +94,69 @@
                                 acc)))))
   (prime-pairs-iter (- (length lst) 1) '()))
 
-(define split-array-of-allowed-pairs (append-map prime-pairs primes-list-split))
+(define split-array-of-allowed-pairs 
+  (append-map prime-pairs primes-list-split))
 
 
 ;; Use list of pairs for efficient search for groups of five that satisfy constraints
 
-(define (prime-group allowed-pairs size)
-  ; From allowed pairs find all groups of 3, 4 and 5
+; Create list of unique first items in the pairs 
+(define (get-first-elements lst)
+  (if (null? lst) '()
+      (cons (caar lst) (get-first-elements (cdr lst)))))
 
-;; Add them
+(define (remove-duplicates lst)
+  (foldr (lambda (x y) (cons x (filter (lambda (z) (not (equal? x z))) y))) empty lst))
 
+(define list-of-unique-first-primes 
+  (remove-duplicates (get-first-elements split-array-of-allowed-pairs)))
+
+; Create hash keyed by starting prime with all primes it can pair with.
+
+; www.stackoverflow.com/questions/1869116/
+; scheme-built-in-to-check-list-containment#1869196
+(define (contains? lst item)
+  (if (empty? lst) #f
+      (or (equal? (first lst) item) (contains? (rest lst) item))))
+
+(define (delete item lst) 
+  (filter (lambda (x) (not (equal? x item))) lst))
+
+(define (get-primes-that-pair prime pairs)
+  (if (null? pairs) '()
+      (append (if (contains? (car pairs) prime)
+                  (delete prime (car pairs))
+                  '())
+              (get-primes-that-pair prime (cdr pairs)))))
+
+; Creates hash where car is prime key and cdr is unique prime values that pair.
+(define (create-hash-of-primes-with-primes-that-pair primes prime-pairs)
+  (map (lambda (p) 
+         (remove-duplicates
+          (cons p (get-primes-that-pair p prime-pairs)))) primes))
+
+(create-hash-of-primes-with-primes-that-pair 
+ list-of-unique-first-primes split-array-of-allowed-pairs)
+
+; Exclude primes with less than four potential partners.
+
+; TODO!
+
+; Only keep sets of which the constraints are met.
+
+; TODO!
+
+; Sum them
 (define (sum lst)
   (if (null? lst) 0
       (+ (car lst) (sum (cdr lst)))))
+
+; TODO!
+
+; Find the largest
+
+; TODO!
+
+; Print answer
+
+; TODO!
