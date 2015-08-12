@@ -52,7 +52,7 @@
               (test-prime (+ i 1)))))
     (test-prime 2)))
 
-(define primes-list (primes-up-to 1000000))
+(define primes-list (primes-up-to 1000))
 
 
 ;; From list generate split arrays of allowed pairs
@@ -117,7 +117,7 @@
 ; scheme-built-in-to-check-list-containment#1869196
 (define (contains? lst item)
   (if (empty? lst) #f
-      (or (equal? (first lst) item) (contains? (rest lst) item))))
+      (or (equal? (first lst) item) (contains? (cdr lst) item))))
 
 (define (delete item lst) 
   (filter (lambda (x) (not (equal? x item))) lst))
