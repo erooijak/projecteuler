@@ -52,7 +52,7 @@
               (test-prime (+ i 1)))))
     (test-prime 2)))
 
-(define primes-list (primes-up-to 1000))
+(define primes-list (primes-up-to 100000))
 
 
 ;; From list generate split arrays of allowed pairs
@@ -75,10 +75,10 @@
 (define primes-list-split 
   (map number->list primes-list))
 
-(define (prime-pairs lst)
+(define (get-prime-pairs lst)
   (define (split lst pos)
     (list (drop-right lst pos) (take-right lst pos)))
-  (define (prime-pairs-iter n acc)
+  (define (get-prime-pairs-iter n acc)
     (if (zero? n) 
         (if 
          (or (null? acc) 
@@ -87,17 +87,17 @@
              (> (length acc) 2)) 
          '() 
          (list acc))
-        (prime-pairs-iter 
+        (get-prime-pairs-iter 
          (- n 1) 
          (let ((s (split lst n)))
            (if (and (prime? (list->number (car s)))
                     (prime? (list->number (cadr s))))
                (append s acc)
                acc)))))
-  (prime-pairs-iter (- (length lst) 1) '()))
+  (get-prime-pairs-iter (- (length lst) 1) '()))
 
 (define split-array-of-allowed-pairs 
-  (append-map prime-pairs primes-list-split))
+  (append-map get-prime-pairs primes-list-split))
 
 
 ;; Use list of pairs for efficient search for groups of five that satisfy constraints
@@ -119,7 +119,7 @@
 ; scheme-built-in-to-check-list-containment#1869196
 (define (contains? lst item)
   (if (empty? lst) #f
-      (or (equal? (first lst) item) (contains? (cdr lst) item))))
+      (or (equal? (car lst) item) (contains? (cdr lst) item))))
 
 (define (delete item lst) 
   (filter (lambda (x) (not (equal? x item))) lst))
@@ -137,16 +137,43 @@
          (remove-duplicates
           (cons p (get-primes-that-pair p prime-pairs)))) primes))
 
-(create-hash-of-primes-with-primes-that-pair 
- list-of-unique-first-primes split-array-of-allowed-pairs)
+(define hash-keyed-by-starting-prime 
+  (create-hash-of-primes-with-primes-that-pair 
+   list-of-unique-first-primes split-array-of-allowed-pairs))
 
 ; Exclude primes with less than four potential partners.
 
-; TODO!
+; Note: now checking for THREE! To see if we can reproduce example with four primes.
+(define (get-primes-with-more-than-four-partners hash-lst)
+  (get-first-elements (filter (lambda (x) (> (length x) 3)) hash-lst)))
 
-; Only keep sets of which the constraints are met.
+(define primes-with-more-than-four-partners 
+  (get-primes-with-more-than-four-partners hash-keyed-by-starting-prime))
 
-; TODO!
+; From primes create sets of which constraints are met;
+
+(define (can-be-added? prime set lst-of-pairs)
+          (display (list (car set) prime))
+  (cond ((null? set) #t)
+        ((and (contains? lst-of-pairs (list (car set) prime))
+              (contains? lst-of-pairs (list prime (car set))))
+         (can-be-added? prime (cdr set) lst-of-pairs))
+        (else #f)))
+
+
+; Print list of pairs:
+split-array-of-allowed-pairs
+
+; Testing
+; 3, 7, 109, and 673: below should be TRUE according to example...
+(can-be-added? (list 6 7 3) (list (list 3) (list 7) (list 1 0 9)) split-array-of-allowed-pairs)
+
+; Why is ((3) (6 7 3)) not in my list?
+; Hypotheses:
+; prime checker is wrong: no, it is right (substituted for other check)
+; something wrong in get-prime-pairs?
+
+
 
 ; Sum them
 (define (sum lst)
