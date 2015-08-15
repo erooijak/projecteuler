@@ -20,10 +20,10 @@
 ; -array-from-prime-sieve-function-and-convert-it-to-l/32021058#32021058
 (define (prime-sieve n)
   (define vec (make-vector (+ n 1) #t))
-  (let loop ((p 3) ; Maintains invariant p = 2j + 1
-             (q 4) ; Maintains invariant q = 2j + 2jj
+  (let loop ((p 3)          ; Maintains invariant p = 2j + 1
+             (q 4)          ; Maintains invariant q = 2j + 2jj
              (j 1)
-             (result '()))
+             (result '(2))) ; Start with 2, is missed otherwise.
     (define (lp result)
       (loop (+ p 2)
             (+ q p p 2)
@@ -41,10 +41,10 @@
 
 ; Have to add the prime 2 to the list since it is missed with above prime-sieve
 (define primes-list 
-  (cons 2 (prime-sieve prime-count)))
+  (prime-sieve prime-count))
 
 (define primes-list-for-prime-checker
-  (cons 2 (prime-sieve prime-count-prime-checker)))
+  (prime-sieve prime-count-prime-checker))
 
 ; Create a hash table with key a number and value if it is prime or not
 ; for fast lookup in prime? method.
