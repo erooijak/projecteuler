@@ -88,11 +88,14 @@
 
 (define (get-prime-pairs lst)
   (define (find-all-prime-pairs prime lst)
-    (let aux ((prime prime) (lst lst) (acc '()))
+    (let loop 
+      ((prime prime) 
+       (lst lst) 
+       (acc '()))
       (if (null? lst) acc
           (if (prime? (list->number (append prime (car lst))))
-              (aux prime (cdr lst) (cons (list prime (car lst)) acc))
-              (aux prime (cdr lst) acc)))))
+              (loop prime (cdr lst) (cons (list prime (car lst)) acc))
+              (loop prime (cdr lst) acc)))))
   (append-map (lambda (x) (find-all-prime-pairs x lst)) lst))
 
 (define allowed-pairs (get-prime-pairs primes-list-split))
