@@ -39,7 +39,6 @@
                               (lp (cons p result)))
           (else (lp result)))))
 
-; Have to add the prime 2 to the list since it is missed with above prime-sieve
 (define primes-list 
   (prime-sieve prime-count))
 
