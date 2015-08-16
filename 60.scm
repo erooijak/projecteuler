@@ -146,9 +146,7 @@
   
   (let loop ((primes primes-list-split)
              (result '()))
-    (if (null? primes)
-        ; Somehow also some results of length 3 or less are returned :/, filter them out.
-        (filter (lambda (e) (= (length e) 5)) result)
+    (if (null? primes) result
         (let ((combos (get-combinations-for-start-prime (car primes))))
           (if (= 5 (length combos))
               (loop (cdr primes) (cons combos result))
