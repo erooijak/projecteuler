@@ -14,8 +14,9 @@
 ; Note: set memory limit to 1028 MB.
 
 ; Initialize magic variables
-(define prime-count 5002)                   ; The first 5002 primes are less than 10.000
-(define prime-count-prime-checker 50000002) ; Primes less then 100.000.000 (concatenations will be of max length 8)
+(define prime-count 5002)                   ; n as 5002 in prime-sieve returns primes that are less than 10.000
+(define prime-count-prime-checker 50000002) ; n = 50.000.002 in prime-sieve returns primes less than 100.000.000 
+                                            ; Note: concatenations will be of max length 8 so up to 100 million.
 (define max-prime 100000000)                ; Check till that index
 
 ; http://stackoverflow.com/questions/32019820/return-vector-fixed-length
