@@ -137,7 +137,7 @@
                 (contains? allowed-pairs (list prime (car set))))
            (can-be-added? prime (cdr set)))
           (else #f)))
-  (define (get-combinations-for-start-prime start-prime)
+  (define (get-combinations start-prime)
     (let loop ((primes (delete start-prime primes-list-split))
                (acc (list start-prime)))
       (cond ((null? primes) acc)
@@ -148,7 +148,7 @@
   (let loop ((primes primes-list-split)
              (result '()))
     (if (null? primes) result
-        (let ((combos (get-combinations-for-start-prime (car primes))))
+        (let ((combos (get-combinations (car primes))))
           (if (= 5 (length combos))
               (loop (cdr primes) (cons combos result))
               (loop (cdr primes) result))))))
