@@ -11,10 +11,12 @@
 
 ;; Generate list of primes up to some target number (e.g., 1.000.000)
 
+; Note: set memory limit to 1028 MB.
+
 ; Initialize magic variables
-(define prime-count 500)                  ; The first 500 primes are less than 1.000
-(define prime-count-prime-checker 500001) ; Primes up to 1.000.003 (concatenations won't go higher)
-(define max-index-to-check 1000004)       ; One higher than 1.000.003
+(define prime-count 5002)                   ; The first 5002 primes are less than 10.000
+(define prime-count-prime-checker 50000002) ; Primes less then 100.000.000 (concatenations will be of max length 8)
+(define max-prime 100000000)                ; Check till that index
 
 ; http://stackoverflow.com/questions/32019820/return-vector-fixed-length
 ; -array-from-prime-sieve-function-and-convert-it-to-l/32021058#32021058
@@ -45,11 +47,12 @@
 (define primes-list-for-prime-checker
   (prime-sieve prime-count-prime-checker))
 
-; Create a hash table with key a number and value if it is prime or not
+
+; Create a hash table with a number as key and if it is prime or not as value
 ; for fast lookup in prime? method.
 (define (make-primes-table input-primes)
   (let loop ((lst input-primes) 
-             (acc (make-vector max-index-to-check #f)))
+             (acc (make-vector max-prime #f)))
     (if (empty? lst)
         acc
         (begin 
@@ -89,6 +92,7 @@
 (define primes-list-split 
   (map number->list primes-list))
 
+; Get all combinations that combine to another prime, with numbers represented as lists
 (define (get-prime-pairs lst)
   (define (find-all-prime-pairs prime lst)
     (let loop ((prime prime) 
@@ -105,52 +109,6 @@
 
 ;; Use list of pairs for efficient search for groups of five that satisfy constraints
 
-; Create list of unique first items in the pairs.
-(define (get-first-elements lst)
-  (if (null? lst) '()
-      (cons (caar lst) (get-first-elements (cdr lst)))))
-
-(define (remove-duplicates lst)
-  (foldr (lambda (x y) (cons x (filter (lambda (z) (not (equal? x z))) y))) empty lst))
-
-(define list-of-unique-first-primes 
-  (remove-duplicates (get-first-elements allowed-pairs)))
-
-; Create hash keyed by starting prime with all primes it can pair with.
-
-(define (delete item lst) 
-  (filter (lambda (x) (not (equal? x item))) lst))
-
-; www.stackoverflow.com/questions/1869116/
-; scheme-built-in-to-check-list-containment#1869196
-(define (contains? lst item)
-  (if (empty? lst) #f
-      (or (equal? (car lst) item) (contains? (cdr lst) item))))
-
-(define (get-primes-that-pair prime pairs)
-  (if (null? pairs) '()
-      (append (if (contains? (car pairs) prime)
-                  (delete prime (car pairs))
-                  '())
-              (get-primes-that-pair prime (cdr pairs)))))
-
-; Creates hash where car is prime key and cdr is unique prime values that pair.
-(define (create-hash-of-primes-with-primes-that-pair primes prime-pairs)
-  (map (lambda (p) 
-         (remove-duplicates
-          (cons p (get-primes-that-pair p prime-pairs)))) primes))
-
-(define hash-keyed-by-starting-prime 
-  (create-hash-of-primes-with-primes-that-pair 
-   list-of-unique-first-primes allowed-pairs))
-
-; Exclude primes with less than four potential partners.
-(define (get-primes-with-more-than-four-partners hash-lst)
-  (get-first-elements (filter (lambda (x) (> (length x) 3)) hash-lst)))
-
-(define primes-with-more-than-four-partners 
-  (get-primes-with-more-than-four-partners hash-keyed-by-starting-prime))
-
 ; From primes create sets of which constraints are met.
 
 ; Try adding new values for each prime in the reduced list of primes with four partners.
@@ -162,43 +120,63 @@
 ; Note: this algorithm misses the combinations that are not from lowest to highest if we
 ;       do not continue the search after having found one.
 
-; Takes as input a prime in list form, a list of those primes and a list of prime pairs.
-(define (can-be-added? prime set lst-of-pairs)
-  (cond ((null? set) #t)
-        ((and (contains? lst-of-pairs (list (car set) prime))
-              (contains? lst-of-pairs (list prime (car set))))
-         (can-be-added? prime (cdr set) lst-of-pairs))
-        (else #f)))
+; www.stackoverflow.com/questions/1869116/
+; scheme-built-in-to-check-list-containment#1869196
+(define (contains? lst item)
+  (if (empty? lst) #f
+      (or (equal? (car lst) item) (contains? (cdr lst) item))))
 
-(define (get-all-combinations-that-satisfy-constraints primes lst-of-pairs)
+(define (delete item lst) 
+  (filter (lambda (x) (not (equal? x item))) lst))
+
+(define (get-all-combinations-that-satisfy-constraints)
+  (define (can-be-added? prime set)
+    (cond ((null? set) #t)
+          ((and (contains? allowed-pairs (list (car set) prime))
+                (contains? allowed-pairs (list prime (car set))))
+           (can-be-added? prime (cdr set)))
+          (else #f)))
   (define (get-combinations-for-start-prime start-prime)
-    (let loop ((primes primes)
-               (acc '()))
+    (let loop ((primes (delete start-prime primes-list-split))
+               (acc (list start-prime)))
       (cond ((null? primes) acc)
-            ((can-be-added? (car primes) acc lst-of-pairs)
-             (loop (cdr primes) (append (car primes) acc)))
+            ((can-be-added? (car primes) acc)
+             (loop (cdr primes) (cons (car primes) acc)))
             (else (loop (cdr primes) acc)))))
   
-  (let loop ((primes primes)
+  (let loop ((primes primes-list-split)
              (result '()))
-    (cond ((null? primes) result)
-          (= 4 (length (get-combinations-for-start-prime (car primes)))
-           (loop (cdr primes) (append (get-combinations-for-start-prime (car primes)) result)))
-          (else (loop (cdr primes) result)))))
+    (if (null? primes)
+        ; Somehow also some results of length 3 or less are returned :/, filter them out.
+        (filter (lambda (e) (= (length e) 5)) result)
+        (let ((combos (get-combinations-for-start-prime (car primes))))
+          (if (= 5 (length combos))
+              (loop (cdr primes) (cons combos result))
+              (loop (cdr primes) result))))))
 
-(get-all-combinations-that-satisfy-constraints primes-with-more-than-four-partners allowed-pairs)
+(define sets-of-primes-for-which-any-two-concatenate-to-another-prime
+  (get-all-combinations-that-satisfy-constraints))
 
 ; Sum them
+
+; Convert split array representation back to number before summing
+(define (make-number-list lst)
+  (map (lambda (l) (list->number l)) lst))
+
 (define (sum lst)
-  (if (null? lst) 0
-      (+ (car lst) (sum (cdr lst)))))
+ (foldl (lambda (acc e) (+ acc e)) 0 (make-number-list lst)))
 
-; TODO!
+(define sums 
+  (map (lambda (l) (sum l)) sets-of-primes-for-which-any-two-concatenate-to-another-prime))
 
-; Find the largest
+; Find the lowest
+(define (lowest-of lst)
+  (let loop ((lst lst)
+             (result (car lst)))
+    (if (null? lst) result
+        (loop (cdr lst) (min (car lst) result)))))
 
-; TODO!
+(define answer (lowest-of sums))
 
 ; Print answer
-
-; TODO!
+answer
