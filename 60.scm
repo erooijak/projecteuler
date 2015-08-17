@@ -14,10 +14,10 @@
 ; Note: set memory limit to 1028 MB.
 
 ; Initialize magic variables
-(define prime-count 5002)                   ; n as 5002 in prime-sieve returns primes that are less than 10.000
-(define prime-count-prime-checker 50000002) ; n = 50.000.002 in prime-sieve returns primes less than 100.000.000 
-                                            ; Note: concatenations will be of max length 8 so up to 100 million.
-(define max-prime 100000000)                ; Check till that index
+(define n 5002)                   ; n as 5002 in prime-sieve returns primes that are less than 10.000
+(define n-prime-checker 50000002) ; n = 50.000.002 in prime-sieve returns primes less than 100.000.000 
+                                  ; Note: concatenations will be of max length 8 so up to 100 million.
+(define max-prime 100000000)      ; Check till that index
 
 ; http://stackoverflow.com/questions/32019820/return-vector-fixed-length
 ; -array-from-prime-sieve-function-and-convert-it-to-l/32021058#32021058
@@ -43,10 +43,10 @@
           (else (lp result)))))
 
 (define primes-list 
-  (prime-sieve prime-count))
+  (prime-sieve n))
 
 (define primes-list-for-prime-checker
-  (prime-sieve prime-count-prime-checker))
+  (prime-sieve n-prime-checker))
 
 
 ; Create a hash table with a number as key and if it is prime or not as value
@@ -111,6 +111,8 @@
 ;; Use list of pairs for efficient search for groups of five that satisfy constraints
 
 ; From primes create sets of which constraints are met.
+
+; TODO: find reduced list of primes with four partners.
 
 ; Try adding new values for each prime in the reduced list of primes with four partners.
 ; If the prime can be concatenated to the front and back of every prime in the set so far
