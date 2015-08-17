@@ -112,14 +112,12 @@
 
 ; From primes create sets of which constraints are met.
 
-; TODO: find reduced list of primes with four partners.
-
-; Try adding new values for each prime in the reduced list of primes with four partners.
-; If the prime can be concatenated to the front and back of every prime in the set so far
-; (i.e., the resulting pairs are both in the list of pairs) we add the prime and continue 
-; to try add a next prime, if this is not possible we discard the previous prime and 
-; try the next prime of the list. This stops once we went through all starting primes.
-; The result is a list of all combinations that satisfy the constraints.
+; Try adding new values for each prime in the list of primes. If the prime can be 
+; concatenated to the front and back of every prime in the set so far (i.e., the resulting 
+; pairs are both in the list of pairs) we add the prime and continue to try add a next prime, 
+; if this is not possible we discard the previous prime and try the next prime of the list. 
+; This stops once we went through all starting primes. The result is a list of all 
+; combinations that satisfy the constraints.
 ; Note: this algorithm misses the combinations that are not from lowest to highest if we
 ;       do not continue the search after having found one.
 
@@ -139,7 +137,7 @@
                 (contains? allowed-pairs (list prime (car set))))
            (can-be-added? prime (cdr set)))
           (else #f)))
-  (define (get-combinations start-prime)
+  (define (get-combination start-prime)
     (let loop ((primes (delete start-prime primes-list-split))
                (acc (list start-prime)))
       (cond ((null? primes) acc)
@@ -150,9 +148,9 @@
   (let loop ((primes primes-list-split)
              (result '()))
     (if (null? primes) result
-        (let ((combos (get-combinations (car primes))))
-          (if (= 5 (length combos))
-              (loop (cdr primes) (cons combos result))
+        (let ((combo (get-combination (car primes))))
+          (if (= 5 (length combo))
+              (loop (cdr primes) (cons combo result))
               (loop (cdr primes) result))))))
 
 (define sets-of-primes-for-which-any-two-concatenate-to-another-prime
