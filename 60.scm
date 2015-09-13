@@ -21,7 +21,6 @@
                                             ; Note: concatenations will be of max length 8 
 (define max-prime 100000000)                ;       so therefore up to 100 million.
 
-
 ; Generates primes using a Sieve of Eratosthenes with Donald Knuth's algorithm
 ; Source: http://stackoverflow.com/questions/32019820/return-vector-fixed-length-array-from-
 ;         prime-sieve-function-and-convert-it-to-l/32021058#32021058
@@ -50,9 +49,8 @@
 
 (define primes-list-for-prime-checker (prime-sieve prime-count-prime-checker))
 
-
 ; Create a hash table with as key a number and if it is prime or not as value. This table will
-; be use for quickly determining if a given number is prime or not in the prime? method.
+; be used for quickly determining if a given number is prime or not in the prime? method.
 (define (make-primes-table input-primes)
   (let loop ((lst input-primes) 
              (acc (make-vector max-prime #f)))
