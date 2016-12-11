@@ -8,32 +8,16 @@
 #
 # How many different ways can £2 be made using any number of coins?
 
-start = Time.now
-ways = 0
-0.upto 1 do |i|
-  a = 200 * i 
-  if a > 200 then next end
-  0.upto 2 do |j|
-  	b = 100 * j 
-  	if a+b > 200 then next end
-  	0.upto 4 do |k|
-  	  c = 50 * k 
-  	  if a+b+c > 200 then next end
-  	  0.upto 10 do |l|
-  	    d = 20 * l 
-  	    if a+b+c+d > 200 then next end
-  	    0.upto 20 do |m|
-          e = 10 * m 
-          if a+b+c+d+e > 200 then next end
-          0.upto 40 do |n|
-            f = 5 * n 
-            if a+b+c+d+e+f > 200 then next end
-            0.upto 100 do |o|
-              g = 2 * o 
-              if a+b+c+d+e+f+g > 200 then next end
-              0.upto 200 do |p|
-              	h = 1 * p 
-              	if a+b+c+d+e+f+g+h > 200 then next end
-              	ways += 1 if a+b+c+d+e+f+g+h == 200 end end end end end end end end
+coins = [1, 2, 5, 10, 20, 50, 100, 200]
 
-puts "The answer is #{ways} and it took #{Time.now-start} seconds."
+def count_ways(coins, amount)
+  if (amount < 0 || coins.empty?)
+    0
+  elsif (amount == 0)
+    1
+  else 
+    count_ways(coins, amount - coins[0]) + count_ways(coins[1..-1], amount)
+  end
+end
+
+puts count_ways(coins, 200)
